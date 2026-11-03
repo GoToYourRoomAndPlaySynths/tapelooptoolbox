@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="memphis">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tape Loop Toolbox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#131109;
+    --panel:#201c14;
+    --panel-light:#2a2418;
+    --ridge:#0d0b06;
+    --metal-hi:#4a4230;
+    --amber:#ffb020;
+    --amber-dim:#6b4c17;
+    --amber-glow:rgba(255,176,32,0.55);
+    --red:#c9463a;
+    --red-dim:#5a231f;
+    --green:#8fae64;
+    --cream:#ece6d8;
+    --dim:#9b937f;
+    --dim-2:#6b6455;
+    --body-glow:#2a2418;
+    --rack-text:#ece6d8; --rack-dim:#9b937f; --rack-faint:#6b6455;
+    --screw-a:#6b634c; --screw-b:#1c1810;
+    --tab-a:#201c14; --tab-b:#171310;
+    --tab-active-a:#c3ac76; --tab-active-b:#8f7c4b; --tab-active-text:#241c0a;
+    --well-a:#171310; --well-b:#100e09;
+    --screen:#0e0c08; --input-bg:#3c3830;
+    --btn-a:#3a3122; --btn-b:#241f16;
+    --primary-a:#ffbe45; --primary-b:#d38f18; --primary-text:#241c0a; --primary-shadow:#7a5410;
+    --listen-a:#d95b4c; --listen-b:#a3372c; --listen-text:#fff0ec; --listen-shadow:#5a201a;
+    --track:#5c5850; --green-dim:#3f5327;
+    --outer-text:#a39b87; --outer-ring:#ece6d8;
+  }
+  /* ===== Theme previews ===== */
+  [data-theme="boombox"]{
+    --outer-text:#aeb3ba; --outer-ring:#e6e8eb;
+    --bg:#16181c; --body-glow:#3a3e45;
+    --panel-light:#d3d6db; --panel:#a3a8af; --ridge:#3f434a; --metal-hi:#6d727a;
+    --rack-text:#15171a; --rack-dim:#3d4148; --rack-faint:#3d4148;
+    --screw-a:#f2f3f5; --screw-b:#6d727a;
+    --tab-a:#2c2f35; --tab-b:#1d2025;
+    --tab-active-a:#ff5a4a; --tab-active-b:#c62a22; --tab-active-text:#ffffff;
+    --well-a:#17191d; --well-b:#0e1013; --screen:#060708; --input-bg:#2c2f35;
+    --btn-a:#3c4047; --btn-b:#25282d;
+    --primary-a:#ff5a4a; --primary-b:#c62a22; --primary-text:#ffffff; --primary-shadow:#6e1610;
+    --listen-a:#4fd1ff; --listen-b:#1f8fbf; --listen-text:#04121a; --listen-shadow:#0b3a4f;
+    --amber:#4fd1ff; --amber-dim:#123a4a; --amber-glow:rgba(79,209,255,0.5);
+    --green:#5dff8a; --green-dim:#145a2a; --red:#ff4b3e;
+    --cream:#eef1f5; --dim:#9aa0a8; --dim-2:#7a8088; --track:#555b63;
+  }
+  [data-theme="neon"]{
+    --outer-text:#c49be8; --outer-ring:#ff4fb8;
+    --bg:#0d0221; --body-glow:#3a0f63;
+    --panel-light:#24114d; --panel:#170a35; --ridge:#07010f; --metal-hi:#5a3a8f;
+    --rack-text:#fbeaff; --rack-dim:#c49be8; --rack-faint:#8a6ab8;
+    --screw-a:#b48be0; --screw-b:#1a0a35;
+    --tab-a:#1f0e44; --tab-b:#150934;
+    --tab-active-a:#ff9a3d; --tab-active-b:#ff3d8a; --tab-active-text:#1a0526;
+    --well-a:#13072d; --well-b:#0b0320; --screen:#06011a; --input-bg:#2e1b58;
+    --btn-a:#35206a; --btn-b:#221248;
+    --primary-a:#ffd23f; --primary-b:#ff7a3d; --primary-text:#2a0a1a; --primary-shadow:#7a2d12;
+    --listen-a:#3ee6ff; --listen-b:#1aa3c2; --listen-text:#031418; --listen-shadow:#0a4a57;
+    --amber:#ff4fb8; --amber-dim:#4d1240; --amber-glow:rgba(255,79,184,0.6);
+    --green:#3ee6ff; --green-dim:#0f4a57; --red:#ff5c7a;
+    --cream:#f4eaff; --dim:#b3a0d6; --dim-2:#8a78b0; --track:#4a3480;
+  }
+  [data-theme="memphis"]{
+    --outer-text:#55504a; --outer-ring:#1d1d1d;
+    --bg:#f1e6cf; --body-glow:#fffaf0;
+    --panel-light:#fffbf2; --panel:#f7eedb; --ridge:#1d1d1d; --metal-hi:#1d1d1d;
+    --rack-text:#1d1d1d; --rack-dim:#55504a; --rack-faint:#6a645c;
+    --screw-a:#ffffff; --screw-b:#8a8a8a;
+    --tab-a:#ffe27a; --tab-b:#f5cf3a;
+    --tab-active-a:#2ec4b6; --tab-active-b:#1ba396; --tab-active-text:#0d1f1d;
+    --well-a:#ffffff; --well-b:#fbf6ec; --screen:#fff4c7; --input-bg:#ffffff;
+    --btn-a:#ffffff; --btn-b:#efe6d2;
+    --primary-a:#ff7aa8; --primary-b:#e8457d; --primary-text:#ffffff; --primary-shadow:#8a1d45;
+    --listen-a:#7b6cf0; --listen-b:#5543d1; --listen-text:#ffffff; --listen-shadow:#2a1f80;
+    --amber:#0f9488; --amber-dim:#c9f2ee; --amber-glow:rgba(15,148,136,0.15);
+    --green:#d4006f; --green-dim:#ffc2df; --red:#d62839;
+    --cream:#1d1d1d; --dim:#4f4a44; --dim-2:#6a645c; --track:#1d1d1d;
+  }
+  [data-theme="memphis"] .tab-btn{color:#3d3420;}
+  [data-theme="memphis"] .panel{box-shadow:inset 0 0 0 1px #1d1d1d, 3px 3px 0 #2ec4b6;}
+  [data-theme="memphis"] .rack{box-shadow:6px 6px 0 #ff7aa8, 12px 12px 0 #2ec4b6;}
+  /* Pastel only: common tempos use teal, out-of-range uses magenta */
+  [data-theme="memphis"] tbody tr.sweet td{color:var(--amber);}
+  [data-theme="memphis"] .bpm-bar-fill{background:linear-gradient(90deg,var(--green-dim),var(--green));}
+  [data-theme="memphis"] tr.sweet .bpm-bar-fill{background:linear-gradient(90deg,var(--amber-dim),var(--amber));}
+  [data-theme="memphis"] .legend .lg-sweet{background:var(--amber);}
+  [data-theme="memphis"] .legend .lg-other{background:var(--green);}
+  /* Pastel: carry the teal panel shadow up the right side of the last tab */
+  [data-theme="memphis"] .tab-bar{padding-right:3px;margin-right:-3px;}
+  [data-theme="memphis"] .tab-bar::after{right:3px;}
+  [data-theme="memphis"] .tab-btn:last-child{box-shadow:3px 3px 0 #2ec4b6;}
+  [data-theme="memphis"] .tab-btn.active:last-child{box-shadow:inset 0 1px 0 rgba(255,255,255,0.3), 3px 3px 0 #2ec4b6;}
+  [data-theme="memphis"] .panel.panel-top{box-shadow:inset 0 0 0 1px #1d1d1d, 3px 3px 0 #2ec4b6, 3px 0 0 #2ec4b6;}
+  /* theme switcher: horizontal row above the panel on narrow screens,
+     fixed vertical strip on the right on wider screens */
+  .theme-switch{
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    margin:0 0 16px;z-index:40;
+  }
+  .theme-switch-label{
+    font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:2px;
+    text-transform:uppercase;color:var(--outer-text);
+  }
+  .theme-dots{display:flex;gap:9px;}
+  .theme-dot{
+    width:16px;height:16px;padding:0;border-radius:50%;
+    border:1px solid rgba(0,0,0,0.45);
+    box-shadow:0 1px 2px rgba(0,0,0,0.35);
+    cursor:pointer;position:relative;transform:none;
+  }
+  .theme-dot::before{content:"";position:absolute;inset:-6px;} /* larger tap area */
+  .theme-dot::after{
+    content:attr(data-name);
+    position:absolute;top:calc(100% + 8px);left:50%;
+    transform:translateX(-50%);
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;
+    text-transform:uppercase;white-space:nowrap;
+    color:#f2f2f2;background:rgba(10,10,10,0.92);
+    padding:4px 8px;border-radius:4px;
+    opacity:0;pointer-events:none;transition:opacity 120ms;
+  }
+  /* mouse users: show the name on hover; touch users: shown briefly after a tap (see script) */
+  @media (hover:hover){ .theme-dot:hover::after{opacity:1;} }
+  .theme-dot:focus-visible::after,.theme-dot.show-tip::after{opacity:1;}
+  .theme-dot:active{transform:scale(0.92);box-shadow:none;}
+  .theme-dot.on{outline:2px solid var(--outer-ring);outline-offset:2px;}
+  .theme-dot:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
+  @media (min-width:860px){
+    body{padding-top:36px;}
+    .theme-switch{
+      position:fixed;top:24px;right:22px;margin:0;
+      flex-direction:column;gap:14px;
+    }
+    .theme-switch-label{writing-mode:vertical-rl;letter-spacing:3px;}
+    .theme-dots{flex-direction:column;gap:12px;}
+    .theme-dot::after{
+      top:50%;left:auto;right:calc(100% + 10px);
+      transform:translateY(-50%);
+    }
+  }
+  /* narrow screens: the row above the panel uses wider pill buttons for easier tapping */
+  @media (max-width:859px){
+    .theme-dots{gap:10px;}
+    .theme-dot{width:44px;height:24px;border-radius:12px;min-height:0;}
+    .theme-dot::before{inset:-8px -4px;}
+  }
+  @media (max-width:400px){
+    .theme-dots{gap:8px;}
+    .theme-dot{width:40px;}
+  }
+  .theme-dot[data-t="boombox"]{background:linear-gradient(135deg,#d3d6db 50%,#ff5a4a 50%);}
+  .theme-dot[data-t="neon"]{background:linear-gradient(135deg,#24114d 50%,#ff4fb8 50%);}
+  .theme-dot[data-t="memphis"]{background:linear-gradient(135deg,#2ec4b6 50%,#ff7aa8 50%);}
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:
+      radial-gradient(ellipse at 50% -10%, var(--body-glow) 0%, var(--bg) 55%);
+    color:var(--cream);
+    font-family:'Oswald',sans-serif;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    padding:20px 16px 60px;
+  }
+  .rack{
+    width:100%;
+    max-width:720px;
+    background:linear-gradient(180deg,var(--panel-light),var(--panel));
+    border-radius:14px;
+    border:1px solid var(--ridge);
+    box-shadow:
+      0 30px 60px -20px rgba(0,0,0,0.7),
+      inset 0 1px 0 rgba(255,255,255,0.04),
+      inset 0 -2px 0 rgba(0,0,0,0.5);
+    padding:22px 26px 30px;
+    position:relative;
+  }
+  .screw{
+    position:absolute;
+    width:9px;height:9px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--screw-a), var(--screw-b) 70%);
+    box-shadow:0 1px 1px rgba(0,0,0,0.8), inset 0 0 1px rgba(255,255,255,0.3);
+  }
+  .screw::after{
+    content:"";
+    position:absolute;top:50%;left:15%;right:15%;height:1px;
+    background:rgba(0,0,0,0.6);
+    transform:rotate(28deg);
+  }
+  .screw.tl{top:12px;left:12px;} .screw.tr{top:12px;right:12px;}
+  .screw.bl{bottom:12px;left:12px;} .screw.br{bottom:12px;right:12px;}
+
+  header{
+    text-align:center;
+    padding:4px 0 20px;
+    border-bottom:1px solid var(--ridge);
+    margin-bottom:20px;
+  }
+  h1{
+    margin:0;
+    font-size:22px;
+    letter-spacing:3px;
+    font-weight:700;
+    text-transform:uppercase;
+    color:var(--rack-text);
+    text-shadow:0 1px 0 rgba(0,0,0,0.25);
+  }
+  .subtitle{
+    margin-top:6px;
+    font-size:11px;
+    letter-spacing:2.5px;
+    text-transform:uppercase;
+    color:var(--rack-dim);
+  }
+
+  .tab-bar{
+    display:flex;
+    gap:2px;
+    margin-bottom:0;
+    position:relative;
+    overflow:hidden; /* keeps pressed/animating tabs from peeking below the edge */
+  }
+  /* the dark edge is drawn above the tabs so they appear to tuck in behind it */
+  .tab-bar::after{
+    content:"";
+    position:absolute;left:0;right:0;bottom:0;
+    height:1px;
+    background:var(--ridge);
+    z-index:2;
+    pointer-events:none;
+  }
+  .tab-btn{
+    flex:1;
+    font-family:'Oswald',sans-serif;
+    font-weight:600;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+    font-size:12px;
+    border:none;
+    border-radius:8px 8px 0 0;
+    padding:12px 10px 10px;
+    cursor:pointer;
+    color:var(--dim);
+    background:linear-gradient(180deg,var(--tab-a),var(--tab-b));
+    transition:all 100ms;
+    position:relative;
+    top:0;
+    margin-top:3px;
+  }
+  .tab-btn.active{
+    background:linear-gradient(180deg,var(--tab-active-a),var(--tab-active-b));
+    color:var(--tab-active-text);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.3);
+    padding:13px 10px;
+    margin-top:0;
+    z-index:1;
+  }
+  .tab-hidden{
+    display:none;
+  }
+
+  .panel{
+    background:linear-gradient(180deg,var(--well-a),var(--well-b));
+    border-radius:8px;
+    border:1px solid var(--ridge);
+    box-shadow:inset 0 2px 6px rgba(0,0,0,0.6);
+    padding:16px 18px;
+    margin-bottom:16px;
+  }
+  .panel.panel-top{
+    border-radius:0 0 8px 8px;
+  }
+  .video-placeholder{
+    aspect-ratio:16/9;
+    background:var(--screen);
+    border:1px solid var(--ridge);
+    border-radius:6px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .video-placeholder-inner{
+    text-align:center;
+  }
+  .video-placeholder-icon{
+    font-size:30px;
+    color:var(--dim);
+    margin-bottom:8px;
+  }
+  .video-placeholder-text{
+    font-size:12px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:var(--dim-2);
+    font-family:'JetBrains Mono',monospace;
+  }
+
+  .contact-form{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .form-field{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .form-field label{
+    font-size:11px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    color:var(--dim-2);
+  }
+  .form-field input,
+  .form-field textarea{
+    background:var(--input-bg);
+    border:1px solid var(--ridge);
+    border-radius:6px;
+    padding:10px 12px;
+    color:var(--cream);
+    font-family:'JetBrains Mono',monospace;
+    font-size:14px;
+    outline:none;
+    resize:vertical;
+  }
+  .form-field input:focus,
+  .form-field textarea:focus{
+    box-shadow:inset 0 1px 4px rgba(0,0,0,0.7), 0 0 0 1px var(--amber);
+  }
+  .contact-form button.primary{
+    width:100%;
+  }
+  .panel-label{
+    font-size:12px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:var(--dim-2);
+    margin-bottom:10px;
+  }
+
+  /* readouts */
+  .readouts{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:10px;
+  }
+  .readout{
+    background:var(--screen);
+    border-radius:6px;
+    padding:10px 8px;
+    text-align:center;
+    border:1px solid var(--ridge);
+    box-shadow:inset 0 1px 4px rgba(0,0,0,0.7);
+  }
+  .readout .rl{
+    font-size:11px;
+    letter-spacing:1.5px;
+    color:var(--dim-2);
+    text-transform:uppercase;
+    margin-bottom:4px;
+  }
+  .readout .rv{
+    font-family:'JetBrains Mono',monospace;
+    font-size:17px;
+    color:var(--amber);
+    text-shadow:0 0 8px var(--amber-glow);
+    letter-spacing:0.5px;
+  }
+  .readout .rv.dim{color:var(--dim);text-shadow:none;}
+  .readout input.rv{
+    background:transparent;
+    border:none;
+    outline:none;
+    width:100%;
+    text-align:center;
+    padding:0;
+    -webkit-appearance:none;
+    appearance:none;
+    cursor:text;
+  }
+  .readout input.rv::placeholder{
+    color:var(--dim);
+    opacity:1;
+  }
+  .readout:focus-within{
+    box-shadow:inset 0 1px 4px rgba(0,0,0,0.7), 0 0 0 1px var(--amber);
+  }
+  .readouts.readouts-4{
+    grid-template-columns:1fr 1fr 1fr 1fr;
+  }
+  .readout-reset-cell{
+    display:flex;
+  }
+  .readout-reset-cell button{
+    width:100%;
+    padding:0;
+    font-size:12px;
+  }
+  .readout .rv.flashing{
+    color:var(--red);
+    text-shadow:none;
+    font-size:13px;
+    letter-spacing:1px;
+    animation:flashSlow 1.6s ease-in-out infinite;
+  }
+  @keyframes flashSlow{
+    0%,100%{opacity:1;}
+    50%{opacity:0.25;}
+  }
+
+  .status-line{
+    margin-top:10px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--dim);
+    text-align:center;
+    min-height:16px;
+  }
+  .status-line.warn{color:var(--red);}
+  .status-line.good{color:var(--green);}
+
+  /* controls */
+  .controls{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  button{
+    font-family:'Oswald',sans-serif;
+    font-weight:600;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    font-size:12px;
+    border:none;
+    border-radius:6px;
+    padding:12px 18px;
+    cursor:pointer;
+    color:var(--cream);
+    background:linear-gradient(180deg,var(--btn-a),var(--btn-b));
+    box-shadow:0 2px 0 var(--ridge), inset 0 1px 0 rgba(255,255,255,0.08);
+    transition:transform 60ms ease;
+  }
+  button:active{transform:translateY(2px);box-shadow:0 0px 0 var(--ridge), inset 0 1px 0 rgba(255,255,255,0.08);}
+  button.primary{
+    background:linear-gradient(180deg,var(--primary-a),var(--primary-b));
+    color:var(--primary-text);
+    box-shadow:0 2px 0 var(--primary-shadow), inset 0 1px 0 rgba(255,255,255,0.35);
+  }
+  button.primary.listening{
+    background:linear-gradient(180deg,var(--listen-a),var(--listen-b));
+    color:var(--listen-text);
+    box-shadow:0 2px 0 var(--listen-shadow), inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+  button.ghost{
+    background:transparent;
+    box-shadow:inset 0 0 0 1px var(--metal-hi);
+  }
+  button:disabled{opacity:0.4;cursor:not-allowed;}
+
+  .slider-wrap{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex:1;
+    min-width:180px;
+  }
+  .slider-wrap input[type=range]{min-width:0;width:0;flex:1 1 auto;} /* lets the slider shrink on narrow screens */
+  .slider-wrap label{
+    font-size:12px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    color:var(--dim-2);
+    white-space:nowrap;
+  }
+  .slider-endpoint{
+    font-size:11px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:var(--dim-2);
+    white-space:nowrap;
+  }
+  input[type=range]{
+    -webkit-appearance:none;
+    flex:1;
+    height:4px;
+    border-radius:2px;
+    background:var(--track);
+    outline:none;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    width:16px;height:16px;
+    border-radius:50%;
+    background:var(--amber);
+    box-shadow:0 0 6px var(--amber-glow), 0 1px 2px rgba(0,0,0,0.6);
+    cursor:pointer;
+    margin-top:-6px;
+  }
+  input[type=range]::-webkit-slider-runnable-track{
+    height:4px;border-radius:2px;background:var(--track);
+  }
+  input[type=range]::-moz-range-track{
+    height:4px;border-radius:2px;background:var(--track);
+  }
+  input[type=range]::-moz-range-thumb{
+    width:16px;height:16px;
+    border:none;
+    border-radius:50%;
+    background:var(--amber);
+    box-shadow:0 0 6px var(--amber-glow), 0 1px 2px rgba(0,0,0,0.6);
+    cursor:pointer;
+  }
+
+  /* results */
+  .sig-chips{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:14px;
+  }
+  .custom-speed-wrap{
+    display:inline-flex;align-items:center;gap:4px;
+    padding:0 10px 0 2px;border-radius:14px;
+    border:1px solid var(--amber);background:var(--amber-dim);
+  }
+  .custom-speed-wrap.hidden{display:none;}
+  #customSpeedChip.active,#customSigChip.active{display:none;}
+  .custom-sig-wrap{padding:0 2px;}
+  .custom-sig-input{width:64px;}
+  .sig-status{margin-top:-6px;margin-bottom:2px;}
+  .sig-status.hidden{display:none;} /* the input takes the button's place while Custom is selected */
+  .custom-speed-input{
+    width:58px;padding:5px 4px;border-radius:12px;border:none !important;
+    border:1px solid var(--amber);background:var(--screen);color:var(--amber);
+    font-family:'JetBrains Mono',monospace;font-size:13px;text-align:center;outline:none;
+  }
+  .custom-speed-input:focus{box-shadow:0 0 0 2px var(--amber-glow);}
+  .custom-speed-unit{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--amber);}
+  @media (max-width:480px){
+    .custom-speed-input{font-size:16px;padding:10px 6px;width:76px;min-height:42px;}
+  }
+  #speedChips{
+    margin-bottom:8px;
+  }
+  .chip.small{
+    font-size:13px;
+    padding:6px 11px;
+  }
+  .hidden{
+    display:none;
+  }
+  .loop-options-status{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:var(--dim-2);
+    margin-bottom:2px;
+  }
+  .loop-options-status.hidden{
+    display:none;
+  }
+  .chip{
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    padding:6px 12px;
+    border-radius:14px;
+    border:1px solid var(--metal-hi);
+    color:var(--dim);
+    cursor:pointer;
+    user-select:none;
+    transition:all 100ms;
+  }
+  .chip.active{
+    background:var(--amber-dim);
+    border-color:var(--amber);
+    color:var(--amber);
+  }
+
+  .results-empty{
+    text-align:center;
+    color:var(--dim-2);
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    padding:20px 10px;
+    line-height:1.7;
+  }
+  .results-empty .legend-green{color:var(--green);}
+  .results-empty .legend-amber{color:var(--amber);}
+  .how-it-works-text{
+    text-align:left;
+    color:var(--dim);
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    line-height:1.7;
+  }
+  .how-it-works-text + .how-it-works-text{
+    margin-top:10px;
+  }
+  .troubleshoot-item{
+    position:relative;
+    padding-left:18px;
+  }
+  .troubleshoot-item::before{
+    content:"";
+    position:absolute;left:2px;top:0.62em;
+    width:7px;height:7px;border-radius:50%;
+    background:var(--amber);
+    box-shadow:0 0 6px var(--amber-glow);
+  }
+  .steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;}
+  .steps li{display:flex;gap:12px;align-items:flex-start;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6;color:var(--cream);}
+  .step-n{flex:0 0 22px;height:22px;border-radius:50%;background:var(--amber-dim);border:1px solid var(--amber);color:var(--amber);font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+  .step-note{display:block;margin-top:4px;font-size:12px;color:var(--dim);}
+  .step-result{margin-top:14px;padding-top:12px;border-top:1px solid var(--ridge);font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.6;color:var(--dim);}
+  .tip{margin-top:14px;padding:9px 12px;background:color-mix(in srgb, var(--amber) 10%, var(--screen));border-left:3px solid var(--amber);border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.5;color:var(--dim);}
+  [data-theme="memphis"] .tip{background:var(--screen);border:none;border-left:3px solid var(--amber);}
+  .tip-tag{color:var(--amber);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-right:10px;}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:12px;padding-top:10px;border-top:1px solid var(--ridge);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:7px;vertical-align:-1px;}
+  #resultsArea:empty + .legend{display:none;}
+  .legend .lg-sweet{background:var(--green);}
+  .legend .lg-other{background:var(--amber);}
+  .how-it-works-text .legend-green{color:var(--green);}
+  .how-it-works-text .legend-amber{color:var(--amber);}
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12.5px;
+  }
+  thead th{
+    text-align:left;
+    font-size:9.5px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    color:var(--dim-2);
+    padding:0 8px 8px;
+    font-weight:400;
+  }
+  tbody td{
+    padding:6px 8px;
+    border-top:1px solid var(--ridge);
+    color:var(--cream);
+    white-space:nowrap;
+  }
+  tbody tr.sweet td{color:var(--green);}
+  .bpm-bar-cell{width:46%;}
+  .bpm-bar-track{
+    height:12px;
+    background:var(--screen);
+    border-radius:3px;
+    overflow:hidden;
+    box-shadow:inset 0 1px 3px rgba(0,0,0,0.7);
+  }
+  .bpm-bar-fill{
+    height:100%;
+    background:linear-gradient(90deg,var(--amber-dim),var(--amber));
+    border-radius:3px;
+  }
+  tr.sweet .bpm-bar-fill{background:linear-gradient(90deg,var(--green-dim),var(--green));}
+
+  footer{
+    margin-top:6px;
+    text-align:center;
+    font-size:10px;
+    letter-spacing:1px;
+    color:var(--rack-faint);
+  }
+
+  /* in-between widths (small tablets, narrow windows): readouts in a 2x2 grid,
+     Start Listening full width with the Sensitivity slider on its own row */
+  @media (max-width:640px){
+    #listenBtn{width:100%;}
+    .controls .slider-wrap{margin-left:0 !important;flex-basis:100%;}
+  }
+  @media (min-width:481px) and (max-width:640px){
+    .readouts.readouts-4{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:480px){
+    .readouts{grid-template-columns:1fr;}
+    .readouts.readouts-4{grid-template-columns:1fr;}
+    h1{font-size:17px;letter-spacing:2px;}
+
+    .readout .rl{font-size:12px;}
+    .readout .rv{font-size:20px;}
+    .readout input.rv{font-size:20px;}
+    .readout .rv.flashing{font-size:15px;}
+
+    button{font-size:14px;padding:13px 18px;min-height:44px;}
+    .readout-reset-cell button{font-size:14px;min-height:44px;}
+
+    .chip{font-size:16px;padding:11px 16px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;}
+    .chip.small{font-size:16px;padding:11px 16px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;}
+
+    .tab-btn{font-size:12px;letter-spacing:0.6px;padding:12px 4px 10px;min-height:44px;min-width:0;}
+
+    input[type=range]::-webkit-slider-thumb{width:22px;height:22px;margin-top:-9px;}
+    input[type=range]::-moz-range-thumb{width:22px;height:22px;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="theme-switch" role="group" aria-label="Color theme">
+    <span class="theme-switch-label">Theme</span>
+    <div class="theme-dots">
+      <button type="button" class="theme-dot on" data-t="memphis" data-name="Pastel" aria-label="Pastel theme" aria-pressed="true"></button>
+      <button type="button" class="theme-dot" data-t="boombox" data-name="Boombox" aria-label="Boombox theme" aria-pressed="false"></button>
+      <button type="button" class="theme-dot" data-t="neon" data-name="Vapor" aria-label="Vapor theme" aria-pressed="false"></button>
+    </div>
+  </div>
+
+<div class="rack">
+  <div class="screw tl"></div><div class="screw tr"></div>
+  <div class="screw bl"></div><div class="screw br"></div>
+
+  <header>
+    <h1>Tape Loop Toolbox</h1>
+    <div class="subtitle">Manually or automatically find BPMs that fit your loops</div>
+  </header>
+
+  <div class="tab-bar" id="tabBar">
+    <button class="tab-btn active" data-tab="beep" type="button">Auto Detect</button>
+    <button class="tab-btn" data-tab="manual" type="button">Manual Mode</button>
+    <button class="tab-btn" data-tab="video" type="button">Video Tutorial</button>
+    <button class="tab-btn" data-tab="contact" type="button">Contact</button>
+  </div>
+
+  <div class="panel panel-top" data-tabs="beep">
+    <div class="panel-label">Auto Detect Tape Length</div>
+    <div class="readouts readouts-4">
+      <div class="readout">
+        <div class="rl">Sound 1</div>
+        <div class="rv dim" id="beep1">Idle</div>
+      </div>
+      <div class="readout">
+        <div class="rl">Sound 2</div>
+        <div class="rv dim" id="beep2">--:--.--</div>
+      </div>
+      <div class="readout">
+        <div class="rl">Loop Length</div>
+        <div class="rv dim" id="loopLen">-- sec</div>
+      </div>
+      <div class="readout-reset-cell">
+        <button class="ghost" id="resetBtn" type="button">Reset</button>
+      </div>
+    </div>
+    <div class="status-line" id="statusLine">Read the instructions below to get started.</div>
+    <div class="controls" style="margin-top:10px;">
+      <button class="primary" id="listenBtn">Start Listening</button>
+      <div class="slider-wrap" style="margin-left:16px;">
+        <label>Sensitivity</label>
+        <span class="slider-endpoint">Lo</span>
+        <input type="range" id="sensSlider" min="1" max="10" value="5" step="1">
+        <span class="slider-endpoint">Hi</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-top tab-hidden" data-tabs="manual">
+    <div class="panel-label">Tape Loop Calculator</div>
+    <div class="readouts readouts-4">
+      <div class="readout">
+        <div class="rl">Inches</div>
+        <input type="text" inputmode="decimal" class="rv dim" id="manualInches" value="--" title="Type a loop length in inches of tape" aria-label="Loop length in inches">
+      </div>
+      <div class="readout">
+        <div class="rl">Centimeters</div>
+        <input type="text" inputmode="decimal" class="rv dim" id="manualCm" value="--" title="Type a loop length in centimeters of tape" aria-label="Loop length in centimeters">
+      </div>
+      <div class="readout">
+        <div class="rl">Seconds</div>
+        <input type="text" inputmode="decimal" class="rv dim" id="manualSeconds" value="--" title="Type a loop length in seconds" aria-label="Loop length in seconds">
+      </div>
+      <div class="readout-reset-cell">
+        <button class="ghost" id="manualResetBtn" type="button">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" data-tabs="beep manual">
+    <div class="panel-label">Tape Speed</div>
+    <div class="sig-chips" id="speedChips">
+      <div class="chip small" data-ips="0.9375" data-desc="Dictation &amp; microcassette slow speed">15/16 ips</div>
+      <div class="chip small active" data-ips="1.875" data-desc="Standard cassette deck &amp; Walkman speed">1 7/8 ips</div>
+      <div class="chip small" data-ips="3.75" data-desc="4-track Portastudio high speed">3 3/4 ips</div>
+      <div class="chip small" data-ips="7.5" data-desc="Pro cassette gear &amp; reel-to-reel">7 1/2 ips</div>
+      <div class="chip small" data-ips="15" data-desc="Reel-to-reel broadcast &amp; studio speed">15 ips</div>
+      <div class="chip small" id="customSpeedChip" data-custom="1">Custom</div>
+      <span class="custom-speed-wrap hidden" id="customSpeedWrap">
+        <input type="text" inputmode="decimal" id="customSpeedInput" class="custom-speed-input" aria-label="Custom tape speed in centimeters per second" autocomplete="off">
+        <span class="custom-speed-unit">cm/s</span>
+      </span>
+    </div>
+    <div class="status-line" id="tapeSpeedStatus">Speed: 1 7/8 ips (4.76 cm/s) &middot; Standard cassette deck &amp; Walkman speed</div>
+  </div>
+
+  <div class="panel" data-tabs="beep manual">
+    <div class="panel-label">Time Signature</div>
+    <div class="sig-chips" id="sigChips">
+      <div class="chip active" data-beats="4">4/4</div>
+      <div class="chip" data-beats="3">3/4</div>
+      <div class="chip" data-beats="6">6/8</div>
+      <div class="chip" data-beats="2">2/4</div>
+      <div class="chip" id="customSigChip" data-custom="1">Custom</div>
+      <span class="custom-speed-wrap custom-sig-wrap hidden" id="customSigWrap">
+        <input type="text" id="customSigInput" class="custom-speed-input custom-sig-input" aria-label="Custom time signature, for example 7/8" placeholder="7/8" autocomplete="off" autocapitalize="off" spellcheck="false">
+      </span>
+    </div>
+    <div class="status-line sig-status hidden" id="sigStatus"></div>
+  </div>
+
+  <div class="panel" data-tabs="beep manual">
+    <div class="panel-label">LOOP OPTIONS<span id="loopOptionsSig"></span></div>
+    <div class="loop-options-status" id="loopOptionsStatus">- Pending Input -</div>
+    <div id="resultsArea"></div>
+    <div class="legend"><span><i class="lg-sweet"></i>Common tempos (60–160 BPM)</span><span><i class="lg-other"></i>Still works, but is outside the common range</span></div>
+  </div>
+
+  <div class="panel" data-tabs="beep">
+    <div class="panel-label">Instructions</div>
+    <ol class="steps">
+      <li><span class="step-n">1</span><div>Record a single short and loud 'sound' (like a clap) to a completely blank tape loop.</div></li>
+      <li><span class="step-n">2</span><div>Play back the loop over speakers at a reasonable volume.</div></li>
+      <li><span class="step-n">3</span><div>Press "Start Listening."<span class="step-note">You may need to permit microphone use by your browser. If the app doesn't detect your 'sound,' adjust speaker volume or app sensitivity as needed.</span></div></li>
+      <li><span class="step-n">4</span><div>Let your loop play until your single 'sound' has been detected twice.<span class="step-note">Once that single 'sound' is detected twice, active listening will stop and BPM &amp; bar length options will be automatically displayed.</span></div></li>
+    </ol>
+    <div class="tip"><span class="tip-tag">Tip</span>Longer tape loops and/or slower tape speeds yield more loop options.</div>
+  </div>
+
+  <div class="panel tab-hidden" data-tabs="manual">
+    <div class="panel-label">Instructions</div>
+    <ol class="steps">
+      <li><span class="step-n">1</span><div>Already measured your loop? Enter its length in any field of this tape loop calculator. The other units (inches, centimeters or seconds) and your loop options fill in automatically as you type.</div></li>
+      <li><span class="step-n">2</span><div>Select your desired tape speed.</div></li>
+      <li><span class="step-n">3</span><div>Then choose a time signature to see the loop options that fit your loop.</div></li>
+    </ol>
+    <div class="tip"><span class="tip-tag">Tip</span>Longer tape loops and/or slower tape speeds yield more loop options.</div>
+  </div>
+
+  <div class="panel" data-tabs="beep">
+    <div class="panel-label">Troubleshooting</div>
+    <div class="how-it-works-text troubleshoot-item">Make sure microphone permissions have been granted in your browser.</div>
+    <div class="how-it-works-text troubleshoot-item">Make sure your tape loop is completely blank and as quiet as possible except for the single instance of your recorded loud 'sound.'</div>
+  </div>
+
+  <div class="panel tab-hidden" data-tabs="manual">
+    <div class="panel-label">Troubleshooting</div>
+    <div class="how-it-works-text troubleshoot-item">Make sure to measure the full tape loop length as precisely as possible (and measure it twice). If using angled splices remember the two ends will overlap, so only include one angled end in your measurement. Even small inaccuracies can lead to noticeable BPM mismatches.</div>
+    <div class="how-it-works-text troubleshoot-item">Timing your loop by hand? Try Auto Detect instead. It's usually more accurate than a stopwatch.</div>
+    <div class="how-it-works-text troubleshoot-item">Things still not lining up? Decks don't always run at their exact advertised speed. You can try nudging your measurements or the 'custom tape' speed, but it may be time to switch to the Auto Detect method.</div>
+  </div>
+
+  <div class="panel panel-top tab-hidden" data-tabs="video">
+    <div class="panel-label">Video Tutorial</div>
+    <div class="video-placeholder">
+      <!-- Replace this placeholder with a real embed once a video exists, e.g.:
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/VIDEO_ID" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      -->
+      <div class="video-placeholder-inner">
+        <div class="video-placeholder-icon">&#9658;</div>
+        <div class="video-placeholder-text">Video tutorial coming soon</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-top tab-hidden" data-tabs="contact">
+    <div class="panel-label">Contact</div>
+    <form class="contact-form" id="contactForm" action="https://formspree.io/f/xjyyrqyl" method="POST">
+      <!-- spam trap: real visitors never see or fill this; Formspree discards submissions that do -->
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
+      <div class="form-field">
+        <label for="contactName">Name</label>
+        <input type="text" id="contactName" name="name" required>
+      </div>
+      <div class="form-field">
+        <label for="contactEmail">Email</label>
+        <input type="email" id="contactEmail" name="email" required>
+      </div>
+      <div class="form-field">
+        <label for="contactSubject">Subject</label>
+        <input type="text" id="contactSubject" name="subject" required>
+      </div>
+      <div class="form-field">
+        <label for="contactMessage">Message</label>
+        <textarea id="contactMessage" name="message" rows="5" required></textarea>
+      </div>
+      <button type="submit" class="primary" id="contactSubmit">Send Message</button>
+      <div class="status-line hidden" id="contactStatus"></div>
+    </form>
+  </div>
+
+  <div class="panel" data-tabs="beep manual video contact">
+    <div class="panel-label">Support This Project</div>
+    <div class="how-it-works-text" style="margin-bottom:14px;">Want to see an iOS/Android app version, or just say thanks? Help support the project by clicking the link below!</div>
+    <a href="https://ko-fi.com/tapelooptoolbox" target="_blank" rel="noopener">
+      <img height="36" style="border:0;height:36px;" src="https://storage.ko-fi.com/cdn/kofi3.png?v=3" alt="Buy Me a Coffee at ko-fi.com" />
+    </a>
+  </div>
+
+  <footer>Audio never leaves your browser &middot; nothing is uploaded or recorded</footer>
+</div>
+
+<script>
+(function(){
+  const REFRACTORY_MS = 280;   // minimum time between separate beep detections
+  const MIN_BPM = 40, MAX_BPM = 220;
+  const SWEET_MIN = 60, SWEET_MAX = 160;
+  let TAPE_SPEED_IPS = 1.875;             // standard cassette speed, 1⅞ ips (changed via speed buttons)
+  let TAPE_SPEED_CMS = TAPE_SPEED_IPS * 2.54;
+
+  const beep1El = document.getElementById('beep1');
+  const beep2El = document.getElementById('beep2');
+  const loopLenEl = document.getElementById('loopLen');
+  const manualSecondsEl = document.getElementById('manualSeconds');
+  const manualInchesEl = document.getElementById('manualInches');
+  const manualCmEl = document.getElementById('manualCm');
+  const statusLine = document.getElementById('statusLine');
+  const listenBtn = document.getElementById('listenBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const manualResetBtn = document.getElementById('manualResetBtn');
+  const sensSlider = document.getElementById('sensSlider');
+  const sigChips = document.querySelectorAll('#sigChips .chip');
+  const speedChips = document.querySelectorAll('#speedChips .chip');
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  const tabPanels = document.querySelectorAll('.panel[data-tabs]');
+  const tapeSpeedStatus = document.getElementById('tapeSpeedStatus');
+  const resultsArea = document.getElementById('resultsArea');
+  const loopOptionsStatus = document.getElementById('loopOptionsStatus');
+  const loopOptionsSig = document.getElementById('loopOptionsSig');
+
+  let audioCtx=null, analyser=null, source=null, stream=null;
+  let timeData=null;
+  let listening=false;
+  let rafId=null;
+  let startTime=0;
+  let noiseFloor=0.015;
+  let lastBeepTime=-Infinity;
+  let beepTimestamps=[]; // ms since startTime
+  let beep1Ms=null;      // timestamp of first beep, or null until detected
+  let beep2Locked=false; // whether the beep2 stopwatch has stopped
+  let autoLoopSec=null;      // loop length from beep detection, in seconds — independent of Manual Mode
+  let autoLengthInches=null; // physical tape length implied by the detected duration at the speed selected when detected
+  let manualLoopSec=null;    // loop length from manual entry, in seconds — independent of Auto Detect
+  let manualLengthSource=null; // {unit:'seconds'|'inches'|'cm', value} — which manual field is authoritative
+  let currentTab='beep';     // which tab is active, so Loop Options knows which length to show
+  let activeSignature=4;        // beats per bar (top number)
+  let activeSigLabel='4/4';     // shown in messages
+
+  function fmtTime(ms){
+    if(ms==null) return '--:--.--';
+    const totalSec = ms/1000;
+    const m = Math.floor(totalSec/60);
+    const s = totalSec - m*60;
+    return String(m).padStart(2,'0')+':'+s.toFixed(2).padStart(5,'0');
+  }
+
+  function setStatus(msg,cls){
+    statusLine.textContent = msg;
+    statusLine.className = 'status-line'+(cls?(' '+cls):'');
+  }
+
+  async function startListening(){
+    try{
+      stream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+    }catch(err){
+      setStatus('Microphone access was blocked or unavailable. Check browser permissions.','warn');
+      return;
+    }
+    audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    source = audioCtx.createMediaStreamSource(stream);
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 1024;
+    analyser.smoothingTimeConstant = 0;
+    source.connect(analyser);
+    timeData = new Uint8Array(analyser.fftSize);
+
+    listening = true;
+    startTime = performance.now();
+    listenBtn.textContent = 'Stop Listening';
+    listenBtn.classList.add('listening');
+    setStatus('Listening... let the tape loop run through at least two sounds.');
+
+    beep1Ms=null; beep2Locked=false; beepTimestamps=[];
+    beep1El.textContent='Detecting';
+    beep1El.classList.remove('dim');
+    beep1El.classList.add('flashing');
+    beep2El.textContent='--:--.--';
+    beep2El.classList.add('dim');
+    beep2El.classList.remove('flashing');
+    autoLoopSec=null;
+    autoLengthInches=null;
+    loopLenEl.textContent='-- sec';
+    loopLenEl.classList.add('dim');
+    refreshResults();
+
+    loop();
+  }
+
+  function stopListening(){
+    listening = false;
+    if(rafId) cancelAnimationFrame(rafId);
+    if(stream) stream.getTracks().forEach(t=>t.stop());
+    if(audioCtx) audioCtx.close();
+    audioCtx=null; source=null; analyser=null; stream=null;
+    listenBtn.textContent = 'Start Listening';
+    listenBtn.classList.remove('listening');
+    if(beep1Ms===null){
+      beep1El.textContent='Idle';
+      beep1El.classList.remove('flashing');
+      beep1El.classList.add('dim');
+    }
+  }
+
+  function getRMS(){
+    analyser.getByteTimeDomainData(timeData);
+    let sum=0;
+    for(let i=0;i<timeData.length;i++){
+      const v=(timeData[i]-128)/128;
+      sum+=v*v;
+    }
+    return Math.sqrt(sum/timeData.length);
+  }
+
+  function sensitivityMultiplier(){
+    // slider 1 (least sensitive) .. 10 (most sensitive)
+    const v = Number(sensSlider.value);
+    return 2.2 + (10-v)*0.9; // higher multiplier = needs louder beep
+  }
+
+  function loop(){
+    if(!listening) return;
+    const rms = getRMS();
+    const now = performance.now();
+    const threshold = Math.max(0.04, noiseFloor*sensitivityMultiplier());
+    const isBeepFrame = rms > threshold;
+
+    if(isBeepFrame && (now-lastBeepTime) > REFRACTORY_MS){
+      lastBeepTime = now;
+      registerBeep(now-startTime);
+    } else {
+      // adapt noise floor slowly while quiet
+      if(rms < threshold*0.7){
+        noiseFloor = noiseFloor*0.97 + rms*0.03;
+      }
+    }
+
+    if(beep1Ms!==null && !beep2Locked){
+      beep2El.textContent = fmtTime((now-startTime) - beep1Ms);
+    }
+
+    rafId = requestAnimationFrame(loop);
+  }
+
+  function registerBeep(msSinceStart){
+    beepTimestamps.push(msSinceStart);
+    const n = beepTimestamps.length;
+
+    if(n===1){
+      beep1Ms = msSinceStart;
+      beep1El.textContent = 'Detected';
+      beep1El.classList.remove('flashing','dim');
+      beep2El.classList.remove('dim'); // stopwatch starts ticking now
+      beep2El.classList.add('flashing');
+      setStatus('Heard 1 sound — waiting for the next one to time the loop.');
+      return;
+    }
+
+    if(n===2){
+      beep2Locked = true;
+      beep2El.textContent = 'Detected';
+      beep2El.classList.remove('dim','flashing');
+    }
+
+    updateLoopLength();
+
+    if(n===2){
+      stopListening();
+    }
+  }
+
+  function updateLoopLength(){
+    const n = beepTimestamps.length;
+    const deltas=[];
+    for(let i=1;i<n;i++) deltas.push(beepTimestamps[i]-beepTimestamps[i-1]);
+    deltas.sort((a,b)=>a-b);
+    const median = deltas[Math.floor(deltas.length/2)];
+    const loopSec = median/1000;
+    autoLoopSec = loopSec;
+    autoLengthInches = loopSec * TAPE_SPEED_IPS;
+    loopLenEl.textContent = loopSec.toFixed(2)+' sec';
+    loopLenEl.classList.remove('dim');
+    setStatus(n===2 ? 'Got it — loop length locked in from 2 sounds. Listening stopped.' : `Refining from ${n} sounds heard so far.`,'good');
+    refreshResults();
+  }
+
+  // Converts a manual length source (whichever unit is authoritative) to
+  // seconds using the currently selected tape speed.
+  function secondsFromManualSource(src){
+    switch(src.unit){
+      case 'inches': return src.value / TAPE_SPEED_IPS;
+      case 'cm': return src.value / TAPE_SPEED_CMS;
+      default: return src.value; // 'seconds' is already seconds
+    }
+  }
+
+  // Updates the three Manual Mode fields (Seconds/Inches/Centimeters) and
+  // refreshes the Loop Options table if Manual Mode is the active tab. This
+  // is completely separate from the Auto Detect Loop Length readout —
+  // neither affects the other.
+  // Whichever unit is authoritative (e.g. 'inches' from a manual entry) is
+  // left exactly as typed; the other units are derived from it at the
+  // current tape speed. This means changing tape speed later re-derives
+  // seconds from a physical inches/cm measurement (and updates the BPM
+  // table on the fly), while a seconds-based length stays fixed in
+  // duration and only its inches/cm equivalents change.
+  // skipEl (optional): the field the person is typing in, left untouched so
+  // their input is never rewritten under their fingers.
+  function applyManualLengthSource(src, skipEl){
+    manualLengthSource = src;
+    const sec = secondsFromManualSource(src);
+    manualLoopSec = sec;
+
+    const vals = [
+      [manualSecondsEl, (src.unit==='seconds' ? src.value : sec)],
+      [manualInchesEl,  (src.unit==='inches'  ? src.value : sec*TAPE_SPEED_IPS)],
+      [manualCmEl,      (src.unit==='cm'      ? src.value : sec*TAPE_SPEED_CMS)]
+    ];
+    vals.forEach(([el, v])=>{
+      if(el !== skipEl) el.value = v.toFixed(2);
+      el.classList.remove('dim');
+    });
+
+    refreshResults();
+  }
+
+  // Shows the Loop Options table for whichever length applies to the
+  // currently active tab (Auto Detect's beep-detected length, or Manual
+  // Mode's manually-entered length), or a pending message if that tab
+  // hasn't produced a length yet.
+  function refreshResults(){
+    const sec = currentTab==='beep' ? autoLoopSec : manualLoopSec;
+    // show the time signature in the heading once there's a loop length, e.g. "LOOP OPTIONS (FOR 7/8)"
+    loopOptionsSig.textContent = sec===null ? '' : ' (for '+activeSigLabel+')';
+    if(sec===null){
+      loopOptionsStatus.textContent = "- Pending Input -";
+      loopOptionsStatus.classList.remove('hidden');
+      resultsArea.innerHTML = '';
+    } else {
+      loopOptionsStatus.classList.add('hidden');
+      renderResults(sec);
+    }
+  }
+
+  function resetAll(){
+    beepTimestamps=[];
+    beep1Ms=null;
+    beep2Locked=false;
+    autoLoopSec=null;
+    autoLengthInches=null;
+
+    if(listening){
+      beep1El.textContent='Detecting';
+      beep1El.classList.remove('dim');
+      beep1El.classList.add('flashing');
+    } else {
+      beep1El.textContent='Idle';
+      beep1El.classList.remove('flashing');
+      beep1El.classList.add('dim');
+    }
+    beep2El.textContent='--:--.--'; beep2El.classList.add('dim'); beep2El.classList.remove('flashing');
+    loopLenEl.textContent='-- sec'; loopLenEl.classList.add('dim');
+    noiseFloor=0.015;
+    lastBeepTime=-Infinity;
+    refreshResults();
+    setStatus(listening ? 'Listening... let the tape loop run through at least two sounds.' : 'Read the instructions below to get started.');
+  }
+
+  // Resets only the Manual Mode fields — leaves Auto Detect untouched.
+  function resetManual(){
+    manualLoopSec=null;
+    manualLengthSource=null;
+    manualSecondsEl.value='--'; manualSecondsEl.classList.add('dim');
+    manualInchesEl.value='--'; manualInchesEl.classList.add('dim');
+    manualCmEl.value='--'; manualCmEl.classList.add('dim');
+    refreshResults();
+  }
+
+  function renderResults(loopSec){
+    const beatsPerBar = activeSignature;
+    const rows=[];
+    for(let bars=1; bars<=16; bars++){
+      const bpm = (bars*beatsPerBar*60)/loopSec;
+      if(bpm>=MIN_BPM && bpm<=MAX_BPM){
+        rows.push({bars, bpm});
+      }
+    }
+    if(rows.length===0){
+      resultsArea.innerHTML = `<div class="results-empty">No BPM between 40–220 fits this loop length in ${activeSigLabel}. Try another tape speed and/or time signature.</div>`;
+      return;
+    }
+    rows.sort((a,b)=>a.bpm-b.bpm);
+    const maxBpm = Math.max(...rows.map(r=>r.bpm));
+    const minBpmShown = Math.min(...rows.map(r=>r.bpm));
+
+    let html = '<table><thead><tr>'+
+      '<th>Bars</th><th>BPM</th><th class="bpm-bar-cell"></th>'+
+      '</tr></thead><tbody>';
+    rows.forEach(r=>{
+      const sweet = r.bpm>=SWEET_MIN && r.bpm<=SWEET_MAX;
+      const pct = ((r.bpm-minBpmShown)/(maxBpm-minBpmShown||1))*70+30;
+      html += `<tr class="${sweet?'sweet':''}">`+
+        `<td>${r.bars}</td>`+
+        `<td>${r.bpm.toFixed(1)}</td>`+
+        `<td class="bpm-bar-cell"><div class="bpm-bar-track"><div class="bpm-bar-fill" style="width:${pct}%"></div></div></td>`+
+        `</tr>`;
+    });
+    html += '</tbody></table>';
+    resultsArea.innerHTML = html;
+  }
+
+  listenBtn.addEventListener('click', ()=>{
+    if(listening) stopListening(); else startListening();
+  });
+  resetBtn.addEventListener('click', resetAll);
+  manualResetBtn.addEventListener('click', resetManual);
+
+  // Tape loop calculator: typing a number in any Manual Mode field updates
+  // the other two fields and the Loop Options table live, so it works on
+  // phones whose number keypads have no return key. Return still works.
+  function sourceFromField(unit, num){
+    // A typed duration is treated as a measurement taken at the currently
+    // selected tape speed: store the implied physical length so a later
+    // speed change re-derives duration correctly (same as Inches/Cm entries).
+    return unit==='seconds' ? {unit:'inches', value: num * TAPE_SPEED_IPS} : {unit, value:num};
+  }
+  function wireManualUnitField(el, unit){
+    let sourceBefore = null;
+    let skipBlurCommit = false; // set by Escape so the restored value isn't re-committed
+    el.addEventListener('focus', ()=>{
+      sourceBefore = manualLengthSource;
+      const num = parseFloat(el.value);
+      el.value = isNaN(num) ? '' : String(num);
+      el.select();
+    });
+    el.addEventListener('input', ()=>{
+      const num = parseFloat(el.value);
+      if(!isNaN(num) && num>0){
+        applyManualLengthSource(sourceFromField(unit, num), el);
+      }
+      // half-typed or empty values: leave the other fields as they are
+    });
+    el.addEventListener('blur', ()=>{
+      if(skipBlurCommit){ skipBlurCommit = false; return; }
+      const num = parseFloat(el.value);
+      if(!isNaN(num) && num>0){
+        applyManualLengthSource(sourceFromField(unit, num)); // tidy to 2 decimals
+      } else if(manualLengthSource){
+        applyManualLengthSource(manualLengthSource);          // restore last good value
+      } else {
+        el.value = '--'; el.classList.add('dim');
+      }
+    });
+    el.addEventListener('keydown', (e)=>{
+      if(e.key==='Enter'){ e.preventDefault(); el.blur(); }
+      else if(e.key==='Escape'){
+        skipBlurCommit = true;
+        if(sourceBefore){ applyManualLengthSource(sourceBefore); el.blur(); }
+        else { el.blur(); resetManual(); }
+      }
+    });
+  }
+  wireManualUnitField(manualSecondsEl, 'seconds');
+  wireManualUnitField(manualInchesEl, 'inches');
+  wireManualUnitField(manualCmEl, 'cm');
+
+  // Tape speed buttons: switching speed changes how inches/centimeters map
+  // to seconds for a manually-entered length. This never touches Auto
+  // Detect's beep-measured Loop Length, which is a raw timing independent
+  // of tape speed.
+  // Applies a tape speed (in ips) and re-derives everything that depends on it.
+  function applySpeed(ips){
+    TAPE_SPEED_IPS = ips;
+    TAPE_SPEED_CMS = TAPE_SPEED_IPS * 2.54;
+
+    // Manual Mode: re-derive from whichever manual field unit is authoritative.
+    if(manualLengthSource){
+      applyManualLengthSource(manualLengthSource);
+    }
+
+    // Auto Detect: the physical tape length implied by the sound timing
+    // (at whatever speed was selected when it was detected) is fixed;
+    // re-derive the duration, and refresh Loop Options, for the new speed.
+    if(autoLengthInches!==null){
+      autoLoopSec = autoLengthInches / TAPE_SPEED_IPS;
+      loopLenEl.textContent = autoLoopSec.toFixed(2)+' sec';
+      loopLenEl.classList.remove('dim');
+    }
+
+    refreshResults();
+  }
+
+  const customSpeedChip = document.getElementById('customSpeedChip');
+  const customSpeedWrap = document.getElementById('customSpeedWrap');
+  const customSpeedInput = document.getElementById('customSpeedInput');
+  const CUSTOM_MIN_CMS = 0.5, CUSTOM_MAX_CMS = 200;
+  let lastCustomCms = null;
+
+  function setCustomStatus(cms){
+    tapeSpeedStatus.textContent = 'Speed: '+cms.toFixed(2)+' cm/s ('+(cms/2.54).toFixed(2)+' ips) · Custom speed';
+  }
+
+  speedChips.forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      if(chip === customSpeedChip){
+        if(!chip.classList.contains('active')){
+          speedChips.forEach(c=>c.classList.toggle('active', c===chip));
+          lastCustomCms = TAPE_SPEED_CMS;            // start from the previous speed
+          customSpeedInput.value = lastCustomCms.toFixed(2);
+          customSpeedWrap.classList.remove('hidden');
+          setCustomStatus(lastCustomCms);
+        }
+        customSpeedInput.focus();
+        customSpeedInput.select();
+        return;
+      }
+      if(chip.classList.contains('active')) return;
+      speedChips.forEach(c=>c.classList.toggle('active', c===chip));
+      customSpeedWrap.classList.add('hidden');
+      applySpeed(Number(chip.dataset.ips));
+      tapeSpeedStatus.textContent = 'Speed: '+chip.textContent+' ('+TAPE_SPEED_CMS.toFixed(2)+' cm/s) · '+chip.dataset.desc;
+    });
+  });
+
+  // Custom speed updates live as you type (no return key needed on phones).
+  customSpeedInput.addEventListener('input', ()=>{
+    const cms = parseFloat(customSpeedInput.value);
+    if(!isNaN(cms) && cms>=CUSTOM_MIN_CMS && cms<=CUSTOM_MAX_CMS){
+      lastCustomCms = cms;
+      applySpeed(cms/2.54);
+      setCustomStatus(cms);
+    }
+  });
+  customSpeedInput.addEventListener('blur', ()=>{
+    if(lastCustomCms!==null) customSpeedInput.value = lastCustomCms.toFixed(2);
+  });
+  customSpeedInput.addEventListener('keydown', (e)=>{
+    if(e.key==='Enter' || e.key==='Escape'){ e.preventDefault(); customSpeedInput.blur(); }
+  });
+
+  // ----- Time signature: presets plus a Custom field (e.g. 7/8) -----
+  const customSigChip = document.getElementById('customSigChip');
+  const customSigWrap = document.getElementById('customSigWrap');
+  const customSigInput = document.getElementById('customSigInput');
+  const sigStatus = document.getElementById('sigStatus');
+  const SIG_MAX_TOP = 32;
+  const SIG_BOTTOMS = [1,2,4,8,16,32];
+  let lastCustomSig = null;   // last valid custom value, e.g. "7/8"
+
+  function setSigStatus(msg, cls){
+    if(!msg){ sigStatus.textContent=''; sigStatus.className='status-line sig-status hidden'; return; }
+    sigStatus.textContent = msg;
+    sigStatus.className = 'status-line sig-status' + (cls ? ' '+cls : '');
+  }
+
+  // Checks a typed time signature. Returns {ok, top, bottom, label, msg, note}.
+  function parseTimeSig(text){
+    const t = text.replace(/\s+/g,'');
+    if(t==='') return {ok:false, msg:''};
+    const m = t.match(/^(\d+)\/(\d+)$/);
+    if(!m){
+      if(/^\d+\/?$/.test(t)) return {ok:false, msg:''};          // still typing, e.g. "7" or "7/"
+      return {ok:false, msg:'Enter a time signature as two whole numbers with a slash, like 7/8.'};
+    }
+    const top = parseInt(m[1],10), bottom = parseInt(m[2],10);
+    if(top<1) return {ok:false, msg:'The top number must be at least 1.'};
+    if(top>SIG_MAX_TOP) return {ok:false, msg:'Top numbers above '+SIG_MAX_TOP+' are not supported. Try splitting it into smaller bars.'};
+    if(SIG_BOTTOMS.indexOf(bottom)===-1) return {ok:false, msg:'The bottom number should be 1, 2, 4, 8, 16 or 32.'};
+    let note = '';
+    if(top>16) note = 'Large time signature: few or no loop options may fit.';
+    else if(bottom>=16) note = 'BPM here counts '+bottom+'th notes, so values run high.';
+    return {ok:true, top, bottom, label: top+'/'+bottom, note};
+  }
+
+  function applySignature(beats, label){
+    activeSignature = beats;
+    activeSigLabel = label;
+    refreshResults();
+  }
+
+  sigChips.forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      if(chip === customSigChip){
+        if(!chip.classList.contains('active')){
+          sigChips.forEach(c=>c.classList.toggle('active', c===chip));
+          customSigInput.value = activeSigLabel;   // start from the current signature
+          lastCustomSig = activeSigLabel;
+          customSigWrap.classList.remove('hidden');
+        }
+        customSigInput.focus();
+        customSigInput.select();
+        return;
+      }
+      if(chip.classList.contains('active')) return;
+      sigChips.forEach(c=>c.classList.toggle('active', c===chip));
+      customSigWrap.classList.add('hidden');
+      setSigStatus('');
+      applySignature(Number(chip.dataset.beats), chip.textContent);
+    });
+  });
+
+  // Custom signature updates live as you type.
+  customSigInput.addEventListener('input', ()=>{
+    const r = parseTimeSig(customSigInput.value);
+    if(r.ok){
+      lastCustomSig = r.label;
+      applySignature(r.top, r.label);
+      setSigStatus(r.note, r.note ? 'warn' : '');
+    } else {
+      setSigStatus(r.msg, r.msg ? 'warn' : '');
+    }
+  });
+  customSigInput.addEventListener('blur', ()=>{
+    // fall back to the last valid signature if the field was left unfinished
+    const typed = customSigInput.value.trim();
+    const r = parseTimeSig(typed);
+    if(!r.ok && lastCustomSig){
+      customSigInput.value = lastCustomSig;
+      if(typed && typed !== lastCustomSig){
+        // keep the explanation visible after the keyboard closes, and say what's in use instead
+        const why = r.msg || 'Enter a time signature as two whole numbers with a slash, like 7/8.';
+        setSigStatus('"'+typed+'" can\'t be used. '+why+' Still using '+lastCustomSig+'.', 'warn');
+      } else {
+        const n = parseTimeSig(lastCustomSig).note || '';
+        setSigStatus(n, n ? 'warn' : '');
+      }
+    } else if(r.ok){
+      customSigInput.value = r.label;
+    }
+  });
+  customSigInput.addEventListener('keydown', (e)=>{
+    if(e.key==='Enter' || e.key==='Escape'){ e.preventDefault(); customSigInput.blur(); }
+  });
+
+  function setActivePage(tab){
+    currentTab = tab;
+    tabButtons.forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+    tabPanels.forEach(p=>{
+      const tabs = p.dataset.tabs.split(' ');
+      p.classList.toggle('tab-hidden', !tabs.includes(tab));
+    });
+    refreshResults();
+  }
+  tabButtons.forEach(btn=>{
+    btn.addEventListener('click', ()=>setActivePage(btn.dataset.tab));
+  });
+  setActivePage('beep');
+
+  const contactForm = document.getElementById('contactForm');
+  const contactStatus = document.getElementById('contactStatus');
+  const contactSubmit = document.getElementById('contactSubmit');
+  function setContactStatus(msg, cls){
+    contactStatus.textContent = msg;
+    contactStatus.className = 'status-line' + (cls ? ' '+cls : '');
+  }
+  if(contactForm){
+    contactForm.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      contactSubmit.disabled = true;
+      setContactStatus('Sending...');
+      const data = new FormData(contactForm);
+      // Formspree uses _subject as the subject line of the notification email
+      const subj = (data.get('subject') || '').toString().trim();
+      data.append('_subject', 'Tape Loop Toolbox: ' + (subj || 'New message'));
+      try{
+        const res = await fetch(contactForm.action, {
+          method:'POST',
+          body:data,
+          headers:{'Accept':'application/json'}
+        });
+        if(res.ok){
+          setContactStatus('Message sent. Thanks for reaching out!', 'good');
+          contactForm.reset();
+        } else {
+          let msg = 'Something went wrong. Please try again.';
+          try{
+            const body = await res.json();
+            if(body && Array.isArray(body.errors) && body.errors.length){
+              msg = body.errors.map(er => er.message).join(' ');
+            }
+          }catch(_){}
+          setContactStatus(msg, 'warn');
+        }
+      } catch(err){
+        setContactStatus('Could not send. Please check your connection and try again.', 'warn');
+      }
+      contactSubmit.disabled = false;
+    });
+  }
+})();
+</script>
+
+<script>
+(function(){
+  var THEMES={
+    boombox:{name:'Boombox',sweet:'Green',other:'Blue'},
+    neon:{name:'Vapor',sweet:'Cyan',other:'Pink'},
+    memphis:{name:'Pastel',sweet:'Pink',other:'Teal'}
+  };
+  var dots=document.querySelectorAll('.theme-dot');
+  function apply(t){
+    if(!THEMES[t]) t='memphis';
+    document.documentElement.setAttribute('data-theme',t);
+    dots.forEach(function(d){var on=d.dataset.t===t;d.classList.toggle('on',on);d.setAttribute('aria-pressed',on?'true':'false');});
+    document.querySelectorAll('.legend-green').forEach(function(e){e.textContent=THEMES[t].sweet;});
+    document.querySelectorAll('.legend-amber').forEach(function(e){e.textContent=THEMES[t].other;});
+    try{localStorage.setItem('tlt-theme',t);}catch(e){}
+  }
+  var tipTimer=null;
+  var touchOnly = window.matchMedia && window.matchMedia('(hover: none)').matches;
+  dots.forEach(function(d){d.addEventListener('click',function(){
+    apply(d.dataset.t);
+    if(touchOnly){
+      // show the theme name for 2 seconds, then hide it
+      dots.forEach(function(x){x.classList.remove('show-tip');});
+      d.classList.add('show-tip');
+      clearTimeout(tipTimer);
+      tipTimer=setTimeout(function(){d.classList.remove('show-tip'); d.blur();},2000);
+    }
+  });});
+  var saved=null; try{saved=localStorage.getItem('tlt-theme');}catch(e){}
+  apply(saved||'memphis');
+})();
+</script>
+</body>
+</html>
