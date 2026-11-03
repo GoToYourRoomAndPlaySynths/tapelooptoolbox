@@ -94,6 +94,7 @@
   [data-theme="memphis"] tr.sweet .bpm-bar-fill{background:linear-gradient(90deg,var(--amber-dim),var(--amber));}
   [data-theme="memphis"] .legend .lg-sweet{background:var(--amber);}
   [data-theme="memphis"] .legend .lg-other{background:var(--green);}
+  [data-theme="memphis"] #statusLine.good{color:var(--amber);} /* match the common-tempo color */
   /* Pastel: carry the teal panel shadow up the right side of the last tab */
   [data-theme="memphis"] .tab-bar{padding-right:3px;margin-right:-3px;}
   [data-theme="memphis"] .tab-bar::after{right:3px;}
@@ -1106,7 +1107,10 @@
     autoLengthInches = loopSec * TAPE_SPEED_IPS;
     loopLenEl.textContent = loopSec.toFixed(2)+' sec';
     loopLenEl.classList.remove('dim');
-    setStatus(n===2 ? 'Got it — loop length locked in from 2 sounds. Listening stopped.' : `Refining from ${n} sounds heard so far.`,'good');
+    setStatus(n===2 ? 'Got it — loop length locked in. Listening stopped. See results below.' : `Refining from ${n} sounds heard so far.`,'good');
+    // copy the detected length into Manual Mode too (fields and results);
+    // each tab's Reset still clears only its own tab
+    applyManualLengthSource({unit:'inches', value:autoLengthInches});
     refreshResults();
   }
 
