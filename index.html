@@ -284,6 +284,21 @@
   .panel.panel-top{
     border-radius:0 0 8px 8px;
   }
+  /* YouTube Short: vertical 9:16 player, centered */
+  .video-embed{
+    width:100%;max-width:360px;margin:0 auto;
+    aspect-ratio:9/16;
+    background:var(--screen);
+    border:1px solid var(--ridge);
+    border-radius:6px;
+    overflow:hidden;
+  }
+  .video-embed iframe{width:100%;height:100%;border:0;display:block;}
+  .video-link{
+    margin-top:10px;text-align:center;
+    font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:1px;
+  }
+  .video-link a{color:var(--amber);}
   .video-placeholder{
     aspect-ratio:16/9;
     background:var(--screen);
@@ -679,7 +694,8 @@
   footer{
     margin-top:6px;
     text-align:center;
-    font-size:10px;
+    font-size:13px;
+    line-height:1.5;
     letter-spacing:1px;
     color:var(--rack-faint);
   }
@@ -744,7 +760,7 @@
   </div>
 
   <div class="panel panel-top" data-tabs="beep">
-    <div class="panel-label">Auto Detect Tape Length</div>
+    <div class="panel-label">Automatically Calculate Tape Loop Length</div>
     <div class="readouts readouts-4">
       <div class="readout">
         <div class="rl">Sound 1</div>
@@ -869,16 +885,10 @@
   </div>
 
   <div class="panel panel-top tab-hidden" data-tabs="video">
-    <div class="panel-label">Video Tutorial</div>
-    <div class="video-placeholder">
-      <!-- Replace this placeholder with a real embed once a video exists, e.g.:
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/VIDEO_ID" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-      -->
-      <div class="video-placeholder-inner">
-        <div class="video-placeholder-icon">&#9658;</div>
-        <div class="video-placeholder-text">Video tutorial coming soon</div>
-      </div>
+    <div class="video-embed">
+      <iframe src="https://www.youtube.com/embed/EY6D7_DxVhA" title="Tape Loop Toolbox video tutorial" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
+    <div class="video-link"><a href="https://youtube.com/shorts/EY6D7_DxVhA" target="_blank" rel="noopener">Watch on YouTube</a></div>
   </div>
 
   <div class="panel panel-top tab-hidden" data-tabs="contact">
